@@ -11,20 +11,26 @@
 {{- end }}
 
 {{- $pages := union .RegularPages .Sections }}
-
+{{ $currentLang := .Site.Language.Lang }}
 {{- if .IsHome }}
-{{- $pages = where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $pages = (where (where site.AllPages "Section" "posts") "Kind" "page") }}
 {{- end}}
 
 {{ $paginator := .Paginate $pages }}
+
+{{- if (and $.IsHome (eq $paginator.PageNumber 1)) }}
+{{- if .Site.Params.homeInfoParams | or .Site.Params.disableSpecial1stPost}}
+{{- partial "home_info.html" . }}
+{{- end -}}
+{{- end -}}
+
 {{ $term := .Data.Term}}
 {{- range $index, $page := $paginator.Pages }}
+{{- if or (not .Translations) (eq .Lang $currentLang ) -}}
 
 {{- $class := "post-entry" }}
 {{- if (and $.IsHome (eq $paginator.PageNumber 1) (eq $index 0)) }}
-{{- if .Site.Params.homeInfoParams | or .Site.Params.disableSpecial1stPost}}
-{{- partial "home_info.html" . }}
-{{- else}}
+{{- if not (.Site.Params.homeInfoParams | or .Site.Params.disableSpecial1stPost ) }}
 {{- $class = "first-entry" }}
 {{- end }}
 {{- else if $term }}
@@ -49,6 +55,7 @@
   </footer>
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
+{{- end -}}
 {{- end }}
 
 {{- if gt $paginator.TotalPages 1 }}
