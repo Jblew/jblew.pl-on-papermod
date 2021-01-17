@@ -1,5 +1,10 @@
 {{- with $.Site.Params.homeInfoParams }}
 <article class="first-entry home-info">
+    {{- with .Image -}}
+    <figure>
+        <img src="{{ .Src }}" alt="{{ .Alt }}" />
+    </figure>
+    {{- end -}}
     <header class="entry-header">
         <h2>{{- .Title | markdownify }}</h2>
     </header>
