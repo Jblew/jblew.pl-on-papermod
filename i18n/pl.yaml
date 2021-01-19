@@ -9,3 +9,6 @@
 
 - id: translations
   translation: "Tłumaczenia"
+
+- id: read_more
+  translation: "Czytaj dalej"
